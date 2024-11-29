@@ -16,13 +16,17 @@ body {
     padding: 10px 20px;
 }
 
+
 .logo a {
+  
     color: #fff;
     text-decoration: none;
     font-size: 24px;
 }
 
 .search-container {
+    width: 50%;
+    height:20%;
     display: flex;
     align-items: center;
 }
@@ -32,6 +36,8 @@ body {
     border: none;
     border-radius: 3px;
     margin-right: 5px;
+    width: 70%;height: 35px;
+    
 }
 
 .search-container button {
