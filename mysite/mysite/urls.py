@@ -24,5 +24,6 @@ urlpatterns = [
     path('', views.homee),
     path('base/',include("base.urls")),
     path('store/',include("store.urls")),
+  
 
 ]
