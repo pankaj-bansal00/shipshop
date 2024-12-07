@@ -10,12 +10,25 @@
 
 <body>
 
+     {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
     <!-- Signup Section -->
     <div class="signup-container">
         <h1>Create an Account</h1>
         <p>Join us and enjoy the best shopping experience!</p>
 
-        <form id="signup-form">
+        <form id="signup-form" method="post" >
+            {% csrf_token %}
+            *
             <!-- Full Name -->
             <label for="fullname">Full Name</label>
             <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
@@ -32,15 +45,16 @@
             <label for="confirm-password">Confirm Password</label>
             <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password"
                 required>
-
             <!-- Submit Button -->
             <button type="submit">Sign Up</button>
         </form>
 
+
+
         <!-- Already have an account -->
         <p class="login-link">Already have an account? <a href="{% url 'login'%}">Log in</a></p>
     </div>
-    
+
 
 </body>
 
