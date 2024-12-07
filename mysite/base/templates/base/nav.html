@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Navbar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/base/nav.css">
+</head>
+
+<body>
+    <nav class="navbar">
+
+        <div class="logo">
+
+            <!-- add the logo image with a link -->
+            <a href="#"><img src="/static/images/logo.png" alt="" height="70" width="150"></a>
+
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Search for products..." />
+            <button type="submit">Search</button>
+        </div>
+        <div class="nav-links">
+
+            <div class="dropdown">
+                <button class="dropbtn">Categories</button>
+                <div class="dropdown-content">
+                    <a href="#">Electronics</a>
+                    <a href="#">Fashion</a>
+                    <a href="#">Home & Garden</a>
+                    <a href="#">Health & Beauty</a>
+                    <a href="#">Sports</a>
+                </div>
+            </div>
+            <div>
+            <a href="#">Cart</a>
+            {%if user.is_authenticated %}
+            <a class="userlogin" href="#">Logout</a>
+            {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'signup' %}">Sign Up</a>
+            {% endif %}
+        </div>
+        </div>
+    </nav>
+
+
+</body>
+
+</html>
