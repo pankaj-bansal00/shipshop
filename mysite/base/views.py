@@ -43,3 +43,7 @@ def user_login(request):  # Renamed from login to avoid conflict
             messages.error(request, 'Invalid username or password')
     
     return render(request, 'register/login.html')
+
+def logout(request):
+    auth_login.logout(request)
+    return redirect('#')
