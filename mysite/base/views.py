@@ -1,39 +1,45 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.shortcuts import redirect
+from django.contrib import messages
+from base.models import Customer
+from django.contrib.auth.models import User
 
 # Create your views here.
 
-def login(request):
-    
-    
-    return render(request,"register/login.html")
-
-"""def signup(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()  # Save the user to the database
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)  # Authenticate the user
-            if user is not None:
-                login(request, user)  # Log the user in
-            return redirect('home')  # Redirect to the home page
-    else:
-        form = UserCreationForm()  # Initialize an empty form for GET request
-
-    # Render the form with context
-    return render(request, "register/signup.html", {'form': form})"""
-
 def signup(request):
-    if request.method == "POST":
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
 
-        print("sucess")
+        # Check if email already exists
+        if Customer.objects.filter(email=email).exists():
+            messages.error(request, 'Email is already registered')
+            return redirect('signup')  # Redirect back to the signup page
+
+        # Create the user
+        user = Customer.objects.create_user(username=username, email=email, password=password)
+        user.save()
+        return redirect('login')  # Redirect to the login page after successful signup
     
     return render(request, "register/signup.html")  
+
+
+def user_login(request):  # Renamed from login to avoid conflict
+    
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        print(username, password)
+
+        # Authenticate user using username
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            print("User authenticated:")
+            auth_login(request, user)  # Using auth_login to avoid conflict
+            return redirect('home')  # Redirect to a home page or dashboard
+        else:
+            messages.error(request, 'Invalid username or password')
+    
+    return render(request, 'register/login.html')

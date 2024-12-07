@@ -1,8 +1,8 @@
 from django.urls import path
-from base import views
+from base.views import user_login,signup
 from django.urls import include
 
 urlpatterns = [
-path('login/', views.login, name='login'),
-path('signup/', views.signup, name='signup'),
+path('login/', user_login, name='login'),
+path('signup/', signup, name='signup'),
 ]

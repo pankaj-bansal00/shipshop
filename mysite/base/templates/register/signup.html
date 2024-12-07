@@ -26,12 +26,12 @@
         <h1>Create an Account</h1>
         <p>Join us and enjoy the best shopping experience!</p>
 
-        <form id="signup-form" method="post" >
+        <form id="signup-form" method="POST" >
             {% csrf_token %}
-            *
+            
             <!-- Full Name -->
             <label for="fullname">Full Name</label>
-            <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+            <input type="text" id="fullname" name="username" placeholder="Enter your username" required>
 
             <!-- Email -->
             <label for="email">Email Address</label>
