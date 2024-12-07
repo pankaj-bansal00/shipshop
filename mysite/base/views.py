@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 
 # Create your views here.
 
-def login(request):
+def login(request):  
     
     
     return render(request,"register/login.html")
