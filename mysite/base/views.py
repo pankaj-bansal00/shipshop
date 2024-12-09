@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.shortcuts import redirect
 from django.contrib import messages
 from base.models import Customer
@@ -44,6 +44,6 @@ def user_login(request):  # Renamed from login to avoid conflict
     
     return render(request, 'register/login.html')
 
-def logout(request):
-    auth_login.logout(request)
-    return redirect('#')
+def user_logout(request):
+    auth_logout(request)  # Properly log out the user
+    return redirect('home')  # Redirect to the homepage or login page after logging ou
