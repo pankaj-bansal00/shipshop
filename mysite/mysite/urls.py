@@ -21,7 +21,7 @@ from mysite import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.homee),
+    path('', views.homee, name='home'),
     path('base/',include("base.urls")),
     path('store/',include("store.urls")),
   
