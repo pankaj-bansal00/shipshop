@@ -49,3 +49,31 @@ def user_login(request):  # Renamed from login to avoid conflict
 def logout(request):
     auth_logout(request)
     return redirect('home')  # Replace 'home' with the name of your desired redirect URL.
+
+def become_seller(request):
+    if hasattr(request.user, 'seller_profile'):
+        messages.info(request, "You are already registered as a seller.")
+        return redirect('home')  # Redirect to a dashboard or relevant page
+
+    if request.method == 'POST':
+        owner_name = request.POST.get('owner_name')
+        shop_name = request.POST.get('shop_name')
+        shop_address = request.POST.get('shop_address')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+
+        if owner_name and shop_name and shop_address and email and phone:
+            seller = Seller.objects.create(
+                user=request.user,
+                owner_name=owner_name,
+                shop_name=shop_name,
+                shop_address=shop_address,
+                email=email,
+                phone=phone
+            )
+            messages.success(request, "You are now a seller!")
+            return redirect('home')  # Redirect to a dashboard or relevant page
+        else:
+            messages.error(request, "All fields are required.")
+
+    return render(request, 'register/become_seller.html')
