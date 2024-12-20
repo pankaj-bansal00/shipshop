@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from seller.models import Seller, product, category  # Ensure Seller is imported
+from seller.models import Product, Seller, Product, Category  # Ensure Seller is imported
 from django.http import JsonResponse
-
+from seller.models import Seller
 @login_required
 def add_product(request):
     # Check if the user is a seller
@@ -79,7 +79,7 @@ def delete_product(request, product_id):
 
 @login_required
 def edit_product(request, product_id):
-    product = get_object_or_404(product, id=product_id, seller=request.user.seller_profile)
+    product = get_object_or_404(Product, id=product_id, seller=request.user.seller_profile)
     if request.method == 'POST':
         # Update product fields here
         product.name = request.POST['name']
@@ -92,16 +92,11 @@ def edit_product(request, product_id):
 
 def search_view(request):
     query = request.GET.get('q')  # 'q' is the name of the input field
-    products = product.objects.filter(name__icontains=query) if query else None
+    products = Product.objects.filter(name__icontains=query) if query else None
     return render(request, 'search_results.html', {'products': products, 'query': query})
 
 
 def category_view(request, category_slug):
     category = get_object_or_404(category, slug=category_slug)
-    products = product.objects.filter(category=category)
+    products = Product.objects.filter(category=category)
     return render(request, 'category.html', {'category': category, 'products': products})
-
-def cart_view(request):
-    # Fetch cart items for the current user
-    cart_items = request.session.get('cart', [])  # Example using session-based cart
-    return render(request, 'cart.html', {'cart_items': cart_items})

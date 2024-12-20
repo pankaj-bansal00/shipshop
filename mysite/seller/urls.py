@@ -13,8 +13,8 @@ urlpatterns = [
     path('edit-product/<int:product_id>/', views.edit_product, name='edit_product'),
     path('add-product/', views.add_product, name='add_product'), 
     path('search/', views.search_view, name='search'), 
-     path('category/<slug:category_slug>/', views.category_view, name='category'),
-      path('cart/', views.cart_view, name='cart'),# Add product logic
+    path('category/<slug:category_slug>/', views.category_view, name='category'),
+     
  
 ]
 

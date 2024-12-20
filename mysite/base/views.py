@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
+from seller.models import Seller
 
 # Create your views here.
 
@@ -51,9 +52,9 @@ def logout(request):
     return redirect('home')  # Replace 'home' with the name of your desired redirect URL.
 
 def become_seller(request):
-    if hasattr(request.user, 'seller_profile'):
+    if hasattr(request.user, 'seller'):
         messages.info(request, "You are already registered as a seller.")
-        return redirect('home')  # Redirect to a dashboard or relevant page
+        return redirect('home')  # Redirect to a relevant page
 
     if request.method == 'POST':
         owner_name = request.POST.get('owner_name')
@@ -63,16 +64,20 @@ def become_seller(request):
         phone = request.POST.get('phone')
 
         if owner_name and shop_name and shop_address and email and phone:
-            seller = Seller.objects.create(
-                user=request.user,
-                owner_name=owner_name,
-                shop_name=shop_name,
-                shop_address=shop_address,
-                email=email,
-                phone=phone
-            )
-            messages.success(request, "You are now a seller!")
-            return redirect('home')  # Redirect to a dashboard or relevant page
+            try:
+                # Create the Seller object
+                seller = Seller.objects.create(
+                    owner_name=owner_name,
+                    shop_name=shop_name,
+                    shop_address=shop_address,
+                    email=email,
+                    phone=phone
+                )
+                seller.save()
+                messages.success(request, "You are now a seller!")
+                return redirect('home')  # Redirect to a relevant page
+            except Exception as e:
+                messages.error(request, f"An error occurred: {str(e)}")
         else:
             messages.error(request, "All fields are required.")
 
