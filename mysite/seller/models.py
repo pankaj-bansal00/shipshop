@@ -1,21 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
-
-
-# Create your models here.
-class Seller(models.Model):
+class Seller(models.Model):     
     seller_id = models.AutoField(primary_key=True)  # Auto-increment primary key field
-    owner_name = models.CharField(max_length=255,default="Default Owner Name")
-    shop_name = models.CharField(max_length=255,)
+    owner_name = models.CharField(max_length=255, default="Default Owner Name")
+    shop_name = models.CharField(max_length=255)
     shop_address = models.TextField()
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, default="", blank=True)
+    password = models.CharField(max_length=255, default="")  # Store hashed passwords
+
+    def save(self, *args, **kwargs):
+        if not self.pk and self.password:  # Hash password only on creation
+            self.password = make_password(self.password)
+        super(Seller, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.shop_name} - {self.owner_name}"   
+        return f"{self.shop_name} - {self.owner_name}"
+
     
 class Category(models.Model):
     name = models.CharField(max_length=255)

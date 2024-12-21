@@ -1,14 +1,91 @@
+from multiprocessing import AuthenticationError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from seller.models import Product, Seller, Product, Category  # Ensure Seller is imported
 from django.http import JsonResponse
 from seller.models import Seller
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
+
+""" Create An Account For Seller """
+def seller_signup(request):
+    if request.method == 'POST':
+        owner_name = request.POST.get('owner_name')
+        shop_name = request.POST.get('shop_name')
+        shop_address = request.POST.get('shop_address')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return render(request, 'register/seller_signup.html')
+
+        try:
+            seller = Seller.objects.create(
+                owner_name=owner_name,
+                shop_name=shop_name,
+                shop_address=shop_address,
+                email=email,                
+                phone=phone,
+                password=password  # Will be hashed in the `save` method
+            )
+            messages.success(request, "Seller account created successfully!")
+            return redirect('seller_login')
+        except Exception as e:
+            messages.error(request, f"Error creating account: {str(e)}")
+    
+    return render(request, 'register/seller_signup.html') 
+""" Login For Seller """
+
+def seller_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try:
+            seller = Seller.objects.get(email=email)
+            if check_password(password, seller.password):  # Verify password
+                request.session['seller_id'] = seller.seller_id  # Store seller in session
+                messages.success(request, "Logged in successfully!")
+                return redirect('seller_dashboard')
+            else:
+                messages.error(request, "Invalid credentials.")
+        except Seller.DoesNotExist:
+            messages.error(request, "No seller account found with this email.")
+    
+    return render(request, 'register/seller_login.html')
+
+""" Dashboard For Seller """
+
+@login_required
+def seller_dashboard(request):
+    seller_id = request.session.get('seller_id')
+    if not seller_id:
+        messages.error(request, "You must log in to access the dashboard.")
+        return redirect('seller_login')
+
+    seller = Seller.objects.get(seller_id=seller_id)
+    return render(request, 'seller/seller_dashboard.html', {'seller': seller})
+
+
+def seller_logout(request):
+    if 'seller_id' in request.session:
+        del request.session['seller_id']  # Remove seller ID from session
+    messages.success(request, "Logged out successfully.")
+    return redirect('seller_login')
+
+# Further views (like delete_product, edit_product, etc.) should be updated similarly.
+
+
+""" Add Product """
 @login_required
 def add_product(request):
     # Check if the user is a seller
-    if not hasattr(request.user, 'seller'):  # Adjusted this to 'seller' instead of 'seller_profile'
-        messages.error(request, "You must be a seller to add products.")
+    if not hasattr(request.user, 'seller'):
+        messages.error(request, "You must be a seller to add products.")                    
         return redirect('seller_dashboard')
 
     if request.method == 'POST':
@@ -26,7 +103,7 @@ def add_product(request):
                 messages.error(request, "All fields are required.")
             else:
                 try:
-                    category = category.objects.get(id=category_id)
+                    category = category.objects.get(id=category_id)                     
                     seller = request.user.seller  # Adjusted to use 'seller'
                     product = product.objects.create(
                         seller=seller,
@@ -58,28 +135,15 @@ def add_product(request):
 
 
 @login_required
-def seller_dashboard(request):
-    if not hasattr(request.user, 'seller'):  # Adjusted to check 'seller' profile
-        messages.error(request, "You must be a seller to view this page.")
-        return redirect('seller_dashboard')
-
-    seller = request.user.seller  # Adjusted to use 'seller'
-    products = seller.product_set.all()  # Using product_set to access related products
-    return render(request, 'seller/seller_dashboard.html', {'products': products})
-
-# Further views (like delete_product, edit_product, etc.) should be updated similarly.
-
-
-@login_required
 def delete_product(request, product_id):
-    product = get_object_or_404(product, id=product_id, seller=request.user.seller_profile)
+    product = get_object_or_404(product, id=product_id, seller=request.user.seller)
     product.delete()
     messages.success(request, "Product deleted successfully.")
     return redirect('seller_dashboard')
 
 @login_required
 def edit_product(request, product_id):
-    product = get_object_or_404(Product, id=product_id, seller=request.user.seller_profile)
+    product = get_object_or_404(product, id=product_id, seller=request.user.seller)
     if request.method == 'POST':
         # Update product fields here
         product.name = request.POST['name']
