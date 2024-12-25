@@ -5,10 +5,8 @@ from django.contrib import messages
 from seller.models import Product, Seller, Category  
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login 
-from django.contrib.auth.hashers import check_password      
-from django.contrib.auth.hashers import make_password       
-
-
+from django.contrib.auth.hashers import check_password 
+from django.contrib.auth.hashers import make_password
 """ Create An Account For Seller """
 
 def seller_signup(request):
@@ -68,10 +66,8 @@ def seller_login(request):
     
     return render(request, 'register/seller_login.html')
 
-
-
 """ Dashboard For Seller """
-@login_required
+
 def seller_dashboard(request):
     seller_id = request.session.get('seller_id')
     if not seller_id:
@@ -81,7 +77,7 @@ def seller_dashboard(request):
     seller = Seller.objects.get(seller_id=seller_id) 
     return render(request, 'seller/seller_dashboard.html', {'seller': seller})
 
-@login_required
+
 def seller_logout(request):
     if 'seller_id' in request.session:  
         del request.session['seller_id']  # Remove seller ID from session
@@ -91,16 +87,15 @@ def seller_logout(request):
 # Further views (like delete_product, edit_product, etc.) should be updated similarly.
 """ Add Product """
 
-@login_required
 def add_product(request):
-    # Check if the user is a seller
-    if not hasattr(request.user, 'seller'):
-        messages.error(request, "You must be a seller to add products.")                    
-        return redirect('seller_dashboard')
-
+    # # Check if the user is a seller
+    # if not hasattr(request.user, 'seller_profile'):
+    #     messages.error(request, "You must be a seller to add products.")
+    #     print("You must be a seller to add products.")
+    #     return redirect('seller_dashboard')
     if request.method == 'POST':
         action = request.POST.get('action')
-        
+        print("Action:")
         if action == 'add_product':
             # Handle adding product
             name = request.POST.get('name')
@@ -109,13 +104,16 @@ def add_product(request):
             description = request.POST.get('description')
             photo = request.FILES.get('photo')
 
-            if not all([name, category_id, price, description]):
-                messages.error(request, "All fields are required.")
+            print("Product details:")
+
+            if not all([name, category_id, price, description, photo]):
+                # messages.error(request, "All fields are required.")
+                print("All fields are required.")
             else:
                 try:
-                    category = category.objects.get(id=category_id)                     
-                    seller = request.user.seller  # Adjusted to use 'seller'
-                    Product = Product.objects.create(
+                    category = Category.objects.get(id=category_id)
+                    seller = request.user.seller_profile
+                    Product.objects.create(
                         seller=seller,
                         name=name,
                         category=category,
@@ -123,35 +121,43 @@ def add_product(request):
                         description=description,
                         photo=photo
                     )
-                    messages.success(request, "Product added successfully!")
+                    print("Product added successfully!")
+                    # messages.success(request, "Product added successfully!")
                     return redirect('seller_dashboard')
-                except category.DoesNotExist:
-                    messages.error(request, "Selected category does not exist.")
-        
+                except Category.DoesNotExist:
+                    print("Selected category does not exist.")
+                    # messages.error(request, "Selected category does not exist.")
+
         elif action == 'add_category':
+
             # Handle adding category
             category_name = request.POST.get('category-name')
             category_image = request.FILES.get('category-image')
 
-            if not category_name or not category_image:
-                return JsonResponse({'error': 'Both name and image are required'}, status=400)
-            
-            category = category.objects.create(name=category_name, image=category_image)
-            categories = category.objects.all()
-            return render(request, 'seller/add_product.html', {'categories': categories})
-    
-    categories = category.objects.all()
-    return render(request, 'seller/add_product.html')
+            print("Category details:")
 
-@login_required
+            if not category_name or not category_image:
+                print("Both name and image are required.")
+                # messages.error(request, "Both name and image are required.")
+                return redirect('add_product')
+
+            Category.objects.create(name=category_name, image=category_image)
+            # messages.success(request, "Category added successfully!")
+            print("Category added successfully!")
+            return redirect('add_product')
+
+    # Default behavior for GET request
+    print("Default behavior for GET request")
+    categories = Category.objects.all()
+    return render(request, 'seller/add_product.html', {'categories': categories})
+
 def delete_product(request, product_id):
-    product = get_object_or_404(product, id=product_id, seller=request.user.seller)
+    product = get_object_or_404(Product, id=product_id, seller=request.user.seller)
     product.delete()
-    messages.success(request, "Product deleted successfully.")
+    messages.success(request, "Product deleted successfully.")  
     return redirect('seller_dashboard')
-@login_required
 def edit_product(request, product_id):
-    product = get_object_or_404(product, id=product_id, seller=request.user.seller)
+    product = get_object_or_404(Product, id=product_id, seller=request.user.seller)
     if request.method == 'POST':
         # Update product fields here
         product.name = request.POST['name']
@@ -162,13 +168,13 @@ def edit_product(request, product_id):
         return redirect('seller_dashboard')
     return render(request, 'edit_product.html', {'product': product})
 
-@login_required
+
 def search_view(request):
     query = request.GET.get('q')  # 'q' is the name of the input field
     products = Product.objects.filter(name__icontains=query) if query else None
     return render(request, 'search_results.html', {'products': products, 'query': query})
 
-@login_required
+
 def category_view(request, category_slug):
     category = get_object_or_404(category, slug=category_slug)
     products = Product.objects.filter(category=category)
