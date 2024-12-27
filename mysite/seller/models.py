@@ -6,7 +6,7 @@ from autoslug import AutoSlugField
 
 
 class Seller(models.Model):     
-    seller_id = models.AutoField(primary_key=True)  # Auto-increment primary key field
+    seller_id = models.AutoField(primary_key=True,)  # Auto-increment primary key field
     owner_name = models.CharField(max_length=255, default="Default Owner Name")
     shop_name = models.CharField(max_length=255)
     shop_address = models.TextField()
@@ -24,6 +24,7 @@ class Seller(models.Model):
 
 class Product(models.Model):
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='products', null=True, blank=True)  # Link to Seller
+    Productid = models.AutoField(primary_key=True, default=None)
     name = models.CharField(max_length=200)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products')                  
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -37,7 +38,7 @@ class Product(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = AutoSlugField(populate_from='name', unique=True)
     image = models.ImageField(upload_to='category_images/')
 
     def __str__(self):

@@ -19,6 +19,7 @@ def seller_signup(request):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
+
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
             return render(request, 'register/seller_signup.html')
@@ -73,10 +74,9 @@ def seller_dashboard(request):
     if not seller_id:
         messages.error(request, "You must log in to access the dashboard.")
         return redirect('seller_login')
-
+    products = Product.objects.filter(seller_id=seller_id)  
     seller = Seller.objects.get(seller_id=seller_id) 
-    return render(request, 'seller/seller_dashboard.html', {'seller': seller})
-
+    return render(request, 'seller/seller_dashboard.html', {'seller': seller, 'products': products})
 
 def seller_logout(request):
     if 'seller_id' in request.session:  
@@ -88,69 +88,27 @@ def seller_logout(request):
 """ Add Product """
 
 def add_product(request):
-    # # Check if the user is a seller
-    # if not hasattr(request.user, 'seller_profile'):
-    #     messages.error(request, "You must be a seller to add products.")
-    #     print("You must be a seller to add products.")
-    #     return redirect('seller_dashboard')
-    if request.method == 'POST':
-        action = request.POST.get('action')
-        print("Action:")
-        if action == 'add_product':
-            # Handle adding product
-            name = request.POST.get('name')
-            category_id = request.POST.get('category')
+
+    categories = Category.objects.all()
+    if request.session.get('seller_id'):
+        seller_id = request.session.get('seller_id')
+        seller = Seller.objects.get(seller_id=seller_id)  
+        if request.method == 'POST':    
+            name = request.POST.get('name')          
             price = request.POST.get('price')
             description = request.POST.get('description')
             photo = request.FILES.get('photo')
-
-            print("Product details:")
-
-            if not all([name, category_id, price, description, photo]):
-                # messages.error(request, "All fields are required.")
-                print("All fields are required.")
-            else:
-                try:
-                    category = Category.objects.get(id=category_id)
-                    seller = request.user.seller_profile
-                    Product.objects.create(
-                        seller=seller,
-                        name=name,
-                        category=category,
-                        price=price,
-                        description=description,
-                        photo=photo
-                    )
-                    print("Product added successfully!")
-                    # messages.success(request, "Product added successfully!")
-                    return redirect('seller_dashboard')
-                except Category.DoesNotExist:
-                    print("Selected category does not exist.")
-                    # messages.error(request, "Selected category does not exist.")
-
-        elif action == 'add_category':
-
-            # Handle adding category
-            category_name = request.POST.get('category-name')
-            category_image = request.FILES.get('category-image')
-
-            print("Category details:")
-
-            if not category_name or not category_image:
-                print("Both name and image are required.")
-                # messages.error(request, "Both name and image are required.")
-                return redirect('add_product')
-
-            Category.objects.create(name=category_name, image=category_image)
-            # messages.success(request, "Category added successfully!")
-            print("Category added successfully!")
-            return redirect('add_product')
-
-    # Default behavior for GET request
-    print("Default behavior for GET request")
-    categories = Category.objects.all()
-    return render(request, 'seller/add_product.html', {'categories': categories})
-
+            category_id = request.POST.get('category')
+            category = Category.objects.get(id=category_id)
+            product = Product.objects.create(seller=seller, name=name, price=price, description=description, photo=photo, category=category)
+            product.save()  
+            return redirect('seller_dashboard')  
+        return render(request, 'seller/add_product.html', {'seller': seller, 'categories': categories})       
+    else:
+        messages.error(request, "You must log in to add products.")
+        print("You must log in to add products.")
+        return redirect('seller_login')
+    
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id, seller=request.user.seller)
     product.delete()
