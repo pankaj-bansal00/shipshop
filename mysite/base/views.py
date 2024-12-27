@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from seller.models import Seller
-
+from django.contrib.auth.hashers import make_password
 # Create your views here.
 
 def signup(request):
@@ -12,18 +12,27 @@ def signup(request):
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        mobile_number = request.POST['mobile_number']
 
         print(username)
         # Check if email already exists
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email=email,mobile_number=mobile_number).exists():
             messages.error(request, 'Email is already registered')
-            return redirect('signup')  # Redirect back to the signup page
+            return redirect('signup')
 
-        # Create the user
-        user = User.objects.create_user(username=username, email=email, password=password)
-        user.save()
-        print("success")
-        return redirect('login')  # Redirect to the login page after successful signup
+        try:
+            user = User.objects.create_user(username=username, 
+                password=password, 
+                email=email, 
+                mobile_number=mobile_number, 
+                )
+            user.save()
+            print("success")
+            return redirect('login')  # Redirect to the login page after successful signup
+        except Exception as e:
+            messages.error(request, f"Error creating account: {str(e)}")
+
     
     return render(request, "register/signup.html")  
 
