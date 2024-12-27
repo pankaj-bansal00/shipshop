@@ -109,13 +109,20 @@ def add_product(request):
         print("You must log in to add products.")
         return redirect('seller_login')
     
+
+    
 def delete_product(request, product_id):
-    product = get_object_or_404(Product, id=product_id, seller=request.user.seller)
+    sellerid = request.session.get('seller_id')
+    seller = Seller.objects.get(seller_id=sellerid)     
+    product = get_object_or_404(Product, Productid=product_id, seller=seller)    
     product.delete()
+    print("Product deleted successfully.")
     messages.success(request, "Product deleted successfully.")  
     return redirect('seller_dashboard')
 def edit_product(request, product_id):
-    product = get_object_or_404(Product, id=product_id, seller=request.user.seller)
+    sellerid = request.session.get('seller_id')
+    seller = Seller.objects.get(seller_id=sellerid)     
+    product = get_object_or_404(Product, Productid=product_id, seller=seller)
     if request.method == 'POST':
         # Update product fields here
         product.name = request.POST['name']
@@ -124,7 +131,7 @@ def edit_product(request, product_id):
         product.save()
         messages.success(request, "Product updated successfully.")
         return redirect('seller_dashboard')
-    return render(request, 'edit_product.html', {'product': product})
+    return render(request, 'seller/edit_product.html', {'product': product})
 
 
 def search_view(request):
