@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import add_product, seller_dashboard, delete_product, edit_product
+from .views import add_product, seller_dashboard, delete_product, edit_product, register_seller
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import messages
@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 
 
 urlpatterns = [     
+    path('register_seller/', views.register_seller, name='register_seller'),
     path('seller_signup/', views.seller_signup, name='seller_signup'),
     path('seller_login/', views.seller_login, name='seller_login'),
     path('seller_logout/', views.seller_logout, name='seller_logout'),
