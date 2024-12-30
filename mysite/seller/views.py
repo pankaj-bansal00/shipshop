@@ -21,6 +21,7 @@ def seller_signup(request):
         phone = request.POST.get('phone')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
+        print(f"Username: {owner_name}, Email: {email}, Password: {password}, Confirm Password: {confirm_password}, Phone: {phone}")
 
 
         if password != confirm_password:
@@ -34,16 +35,17 @@ def seller_signup(request):
                 shop_address=shop_address,
                 email=email,                
                 phone=phone,
-                password=password  # Will be hashed in the `save` method
+                password=password 
             )
             seller.password = make_password(password)
             seller.save()
             messages.success(request, "Seller account created successfully!")
-            return redirect('seller_login')
+            return redirect('register_seller')
         except Exception as e:
             messages.error(request, f"Error creating account: {str(e)}")
     
     return render(request, 'register/seller_signup.html') 
+
 
 """ Login For Seller """
 def seller_login(request):
@@ -85,7 +87,7 @@ def seller_logout(request):
     if 'seller_id' in request.session:  
         del request.session['seller_id']  # Remove seller ID from session
     messages.success(request, "Logged out successfully.")
-    return redirect('seller_login')
+    return redirect('register_seller')
 
 # Further views (like delete_product, edit_product, etc.) should be updated similarly.
 """ Add Product """

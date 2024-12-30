@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password
 from autoslug import AutoSlugField
+from django.core.validators import RegexValidator
 
 
 class Seller(models.Model):     
@@ -11,7 +12,18 @@ class Seller(models.Model):
     shop_name = models.CharField(max_length=255)
     shop_address = models.TextField()
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15, default="", blank=True)
+    phone = models.CharField(
+        max_length=10,
+        unique=True,
+        default='0000000000',
+        validators=[
+            RegexValidator(
+                regex=r'^\d{10}$',
+                message="Mobile number must be exactly 10 digits.",
+                code='invalid_mobile_number'
+            )
+        ]
+    )
     password = models.CharField(max_length=255, default="")  # Store hashed passwords
 
     def save(self, *args, **kwargs):
