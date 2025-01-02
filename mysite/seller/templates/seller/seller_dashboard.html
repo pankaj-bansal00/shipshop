@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h2,
+        h3 {
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .actions {
+            margin-bottom: 20px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            display: inline-block;
+        }
+
+        .actions a:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f4f4f9;
+        }
+
+        img {
+            border-radius: 8px;
+        }
+
+        .no-products {
+            text-align: center;
+            color: #666;
+        }
+        .messages {
+    margin-bottom: 20px;
+}
+.messages p {
+    padding: 10px;
+    border-radius: 4px;
+}
+.messages p.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+.messages p.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+    </style>
+    
+</head>
+
+<body>
+    {% include 'base/nav.html' %}
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="container">
+        <h2>Welcome, {{ seller.ownername }}!</h2>
+        <div style="display: block; margin-bottom: 10px;">
+            <a href="{% url 'seller_logout' %}">Logout</a>
+        </div>
+        <div class="actions">
+            <a href="{% url 'add_product' %}">Add New Product</a>
+        </div>
+
+        <h3>Your Products</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Photo</th>
+                    <!-- <th>Actions</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>${{ product.price }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>
+                        {% if product.photo %}
+                        <img src="{{ product.photo.url }}" alt="{{ product.name }}" width="100">
+                        {% else %}
+                        No Photo
+                        {% endif %}
+                    </td>   
+                    <td>
+                        <button onclick="window.location.href='{% url 'edit_product' product.Productid %}'">Edit</button>
+                        <button onclick="window.location.href='{% url 'delete_product' product.Productid %}'">Delete</button>
+                    </td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="no-products">No products found. Start adding products to your shop!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

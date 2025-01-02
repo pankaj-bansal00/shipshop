@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sellor Register</title>
+    <link rel="stylesheet" href="/static/sellor/register.css">
+</head>
+
+<body>
+    <br>
+<br>
+    <div class="cont">
+        <div class="form sign-in">
+            <form action="{% url 'seller_login' %}" method="post">
+                {% csrf_token %}
+            <h2>Welcome</h2>
+            <label>
+                <span>Email</span>
+                <input type="email" name="email" />
+            </label>
+            <label>
+                <span>Password</span>
+                <input type="password" name="password" />
+            </label>
+            <p class="forgot-pass">Forgot password?</p>
+            <button type="submit" class="submit">Sign In</button>            
+            </form>
+         
+        </div>
+        <div class="sub-cont">
+            <div class="img">
+                <div class="img__text m--up">
+                 
+                    <h3>Don't have an account? Please Sign up!<h3>
+                </div>
+                <div class="img__text m--in">
+                
+                    <h3>If you already has an account, just sign in.<h3>
+                </div>
+                <div class="img__btn">
+                    <span class="m--up">Sign Up</span>
+                    <span class="m--in">Sign In</span>
+                </div>
+            </div>
+            <div class="form sign-up">
+                <form action="{% url 'seller_signup' %}" method="post">
+                    {% csrf_token %}
+                <h2>Create your Account</h2>
+                <label>
+                    <span>Owner Name</span>
+                    <input type="text" name="owner_name" />
+                </label>
+                <label>
+                    <span>Shop name</span>
+                    <input type="text" name="shop_name" />
+                </label>
+                <label>
+                    <span>Shop Address</span>
+                    <input type="text" name="shop_address" />
+                </label>
+                <label>
+                    <span>Phone</span>
+                    <input type="text" name="phone" />
+                </label>
+                <label>
+                    <span>Email</span>
+                    <input type="email" name="email" />
+                </label>
+                <label>
+                    <span>Password</span>
+                    <input type="password" name="password" />
+                </label>
+                <label>
+                    <span>Confirm Password</span>
+                    <input type="password" name="confirm_password" />   
+                </label>
+                
+                <button type="submit" class="submit">Sign Up</button>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.img__btn').addEventListener('click', function() {
+            document.querySelector('.cont').classList.toggle('s--signup');
+        });
+    </script>
+</body>
+</html>

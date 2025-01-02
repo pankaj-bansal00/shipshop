@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Page</title>
-  <link rel="stylesheet" href="/static/register/login.css">
+  <link rel="stylesheet" href="/static/base/register/login.css">
 </head>
 <body>
   {% if messages %}
@@ -17,6 +17,11 @@
     </div>
 {% endif %}
 
+<div class="background">
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+
   <!-- Login Section -->
   <div class="login-container">
     <h1>Welcome Back!</h1>
@@ -25,8 +30,8 @@
     <form id="login-form" method="post">
       {% csrf_token %}
       <!-- Email -->
-      <label for="email">Email Address</label>
-      <input type="text" id="email" name="username" placeholder="Enter username" required>
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" required>
 
       <!-- Password -->
       <label for="password">Password</label>
