@@ -17,13 +17,15 @@ def cart_view(request):
     if request.session.get('custid'):
         # Try to get the cart for the user
         try:
-            cart = Cart.objects.get(user=request.user)
+            custid = request.session.get('custid')
+            user = Customer.objects.get(custid=custid)
+            cart = Cart.objects.get(user=user)
         except Cart.DoesNotExist:
             # If the cart does not exist, create a new one
-            cart = Cart.objects.create(user=request.user)
+            cart = Cart.objects.create(user=user)
 
         # Proceed with your logic (e.g., displaying the cart)
-        return render(request, 'cart/cart.html', {'cart': cart})
+        return render(request, 'cart.html', {'cart': cart})
     else:
         # Redirect to login or show an error
         return redirect('login')
