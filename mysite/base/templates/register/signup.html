@@ -15,6 +15,7 @@
     </style>
 </head>
 <body>
+  <div>
     {% if messages %}
     <div class="container mt-3">
         {% for message in messages %}
@@ -24,11 +25,13 @@
         {% endfor %}
     </div>
 {% endif %}
+  </div>
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
       </div>
     <div class="form-container">
+
         <div class="form-header">
             <h3>Create an Account</h3>
         </div>

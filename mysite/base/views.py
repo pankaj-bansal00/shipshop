@@ -89,6 +89,6 @@ def user_login(request):  # Renamed from login to avoid conflict
 
 
 def logout(request):
-    auth_logout(request)
+    request.session.flush()
     return redirect('home')  # Replace 'home' with the name of your desired redirect URL.
 
