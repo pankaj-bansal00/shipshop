@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from seller.models import Seller
 from .models import Customer
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password, make_password
 
 # Create your views here.
 
@@ -53,7 +53,7 @@ def signup(request):
             user.save()
             print("Account created successfully")
             messages.success(request, "Account created successfully")
-            return redirect('login')  # Redirect to login
+            return redirect('login')  # Reduirect to login
         except Exception as e:
             print(f"Error creating account: {str(e)}")
             messages.error(request, f"Error creating account: {str(e)}")
@@ -65,23 +65,30 @@ def signup(request):
 def user_login(request):  # Renamed from login to avoid conflict
     
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        print(username, password)
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        print(email, password)
 
         # Authenticate user using username
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            print("User authenticated:")
-            auth_login(request, user)  # Using auth_login to avoid conflict
-            return redirect('home')  # Redirect to a home page or dashboard
-        else:
-            messages.error(request, 'Invalid username or password')
+        try:
+            # Check if a seller with the given email exists
+            customer = Customer.objects.get(email=email)
+            if check_password(password, customer.password):  # Verify password
+                request.session['custid'] = customer.custid  # Store seller in session
+                messages.success(request, "Logged in successfully!")
+                print("Login successful, redirecting to dashboard...")
+                return redirect('home')  # Redirect to seller dashboard
+            else:
+                print("Invalid credentials: Password mismatch")
+                messages.error(request, "Invalid credentials. Please try again.")
+        except Customer.DoesNotExist:   
+            print("Customer with email not found:", email)
+            messages.error(request, "No customer account found with this email.")
     
-    return render(request, 'register/login.html')
+    return render(request, 'register/login.html')   
 
 
 def logout(request):
-    auth_logout(request)
+    request.session.flush()
     return redirect('home')  # Replace 'home' with the name of your desired redirect URL.
 

@@ -6,7 +6,8 @@ from autoslug import AutoSlugField
 from django.core.validators import RegexValidator
 
 
-class Seller(models.Model):     
+class Seller(models.Model):   
+    is_seller = models.BooleanField(default=True)  
     seller_id = models.AutoField(primary_key=True,)  # Auto-increment primary key field
     owner_name = models.CharField(max_length=255, default="Default Owner Name")
     shop_name = models.CharField(max_length=255)
