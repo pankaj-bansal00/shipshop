@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
     'base',
+    'Cart',
     'seller',    
     'store',
     'django.contrib.admin',
