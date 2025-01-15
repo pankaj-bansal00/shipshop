@@ -7,6 +7,11 @@
 </head>
 
 <body>
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: white;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
     <br>
 <br>
     <div class="cont">
@@ -16,11 +21,11 @@
             <h2>Welcome</h2>
             <label>
                 <span>Email</span>
-                <input type="email" name="email" />
+                <input required type="email" name="email" />
             </label>
             <label>
                 <span>Password</span>
-                <input type="password" name="password" />
+                <input required type="password" name="password" />
             </label>
             <p class="forgot-pass">Forgot password?</p>
             <button type="submit" class="submit">Sign In</button>            
@@ -48,31 +53,31 @@
                 <h2>Create your Account</h2>
                 <label>
                     <span>Owner Name</span>
-                    <input type="text" name="owner_name" />
+                    <input required type="text" name="owner_name" />
                 </label>
                 <label>
                     <span>Shop name</span>
-                    <input type="text" name="shop_name" />
+                    <input required type="text" name="shop_name" />
                 </label>
                 <label>
                     <span>Shop Address</span>
-                    <input type="text" name="shop_address" />
+                    <input required type="text" name="shop_address" />
                 </label>
                 <label>
                     <span>Phone</span>
-                    <input type="text" name="phone" />
+                    <input required type="text" name="phone" />
                 </label>
                 <label>
                     <span>Email</span>
-                    <input type="email" name="email" />
+                    <input required type="email" name="email" />
                 </label>
                 <label>
                     <span>Password</span>
-                    <input type="password" name="password" />
+                    <input required type="password" name="password" />
                 </label>
                 <label>
                     <span>Confirm Password</span>
-                    <input type="password" name="confirm_password" />   
+                    <input required type="password" name="confirm_password" />   
                 </label>
                 
                 <button type="submit" class="submit">Sign Up</button>

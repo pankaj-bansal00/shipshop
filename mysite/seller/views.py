@@ -48,7 +48,7 @@ def seller_signup(request):
         except Exception as e:
             messages.error(request, f"Error creating account: {str(e)}")
 
-    return render(request, "register/seller_signup.html")
+    return render(request, "register/register_seller.html")
 
 
 """ Login For Seller """

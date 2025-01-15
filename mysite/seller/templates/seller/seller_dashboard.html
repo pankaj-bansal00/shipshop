@@ -5,92 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
-        }
-
-        h2,
-        h3 {
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .actions {
-            margin-bottom: 20px;
-        }
-
-        .actions a {
-            text-decoration: none;
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 4px;
-            font-size: 16px;
-            display: inline-block;
-        }
-
-        .actions a:hover {
-            background-color: #0056b3;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table th,
-        table td {
-            text-align: left;
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-
-        table th {
-            background-color: #f4f4f9;
-        }
-
-        img {
-            border-radius: 8px;
-        }
-
-        .no-products {
-            text-align: center;
-            color: #666;
-        }
-        .messages {
-    margin-bottom: 20px;
-}
-.messages p {
-    padding: 10px;
-    border-radius: 4px;
-}
-.messages p.success {
-    background-color: #d4edda;
-    color: #155724;
-}
-.messages p.error {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-    </style>
-    
+    <link rel="stylesheet" href=" /static/sellor/seller dashboard.css">
 </head>
 
 <body>
-    {% include 'base/nav.html' %}
+  
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
@@ -98,15 +17,23 @@
         {% endfor %}
     </div>
     {% endif %}
-    <div class="container">
-        <h2>Welcome, {{ seller.ownername }}!</h2>
-        <div style="display: block; margin-bottom: 10px;">
-            <a href="{% url 'seller_logout' %}">Logout</a>
-        </div>
-        <div class="actions">
-            <a href="{% url 'add_product' %}">Add New Product</a>
-        </div>
 
+    {% if seller %}
+    <div class="navbar">
+        <a href="{% url 'home' %}"><img src="/static/images/logo.png" alt="Logo" height="70" width="150"></a>
+        <ul>
+          <h1>Welcome, {{ seller.owner_name }}</h1>
+    
+        </ul>
+        <div class="actions">
+            <a href="{% url 'add_product' %}">+ Add Product</a>
+            <a href="{% url 'seller_logout' %}" class="logout">Logout</a>
+        </div>
+    </div>
+
+    {% endif %}
+
+    <div class="product-list">
         <h3>Your Products</h3>
         <table>
             <thead>
@@ -124,7 +51,7 @@
                 <tr>
                     <td>{{ product.name }}</td>
                     <td>{{ product.category.name }}</td>
-                    <td>${{ product.price }}</td>
+                    <td>₹{{ product.price }}</td>
                     <td>{{ product.description }}</td>
                     <td>
                         {% if product.photo %}
