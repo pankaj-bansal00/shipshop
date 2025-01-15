@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                     django.core.validators.RegexValidator(
                         code="invalid_mobile_number",
                         message="Mobile number must be exactly 10 digits.",
-                        regex="^\\d{10}$",
+                        regex="^\\d{10}",
                     )
                 ],
             ),

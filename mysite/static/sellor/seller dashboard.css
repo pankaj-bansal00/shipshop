@@ -1,0 +1,149 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background-color: #333333;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar ul li {
+    display: inline;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.navbar ul li a:hover {
+    background-color: #0056b3;
+}
+
+.navbar .actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar .actions a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    background-color: #28a745;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.navbar .actions a.logout {
+    background-color: #dc3545;
+}
+
+.navbar .actions a:hover {
+    opacity: 0.9;
+}
+
+body {
+    font-family: Arial, sans-serif;
+ 
+    background-color: #f4f4f9;
+}
+
+h2,
+h3 {
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.actions {
+    margin-bottom: 20px;
+}
+
+.actions a {
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 16px;
+    display: inline-block;
+}
+
+.actions a:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th,
+table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f4f4f9;
+}
+
+img {
+    border-radius: 8px;
+}
+
+.no-products {
+    text-align: center;
+    color: #666;
+}
+.messages {
+margin-bottom: 20px;
+}
+.messages p {
+padding: 10px;
+border-radius: 4px;
+}
+.messages p.success {
+background-color: #d4edda;
+color: #155724;
+}
+.messages p.error {
+background-color: #f8d7da;
+color: #721c24;
+}
