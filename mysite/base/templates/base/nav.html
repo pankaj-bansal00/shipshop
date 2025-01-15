@@ -48,6 +48,13 @@
               
               
                     <a href="{% url 'logout' %}">Logout</a>
+                    {% if order and order.slug %}
+                    <a href="{% url 'place_order' slug=order.slug %}">Place Order</a>
+                {% else %}
+                    <span>No active order</span>
+                {% endif %}
+                
+
 
                 {% else %}
                     <a href="{% url 'login' %}">Login</a>

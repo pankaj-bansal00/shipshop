@@ -15,7 +15,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 def cart_view(request):
     if request.session.get('custid'):
-        # print("request.session.get('custid')",request.session.get('custid'))
         # Try to get the cart for the user
         try:
             custid = request.session.get('custid')
@@ -34,9 +33,8 @@ def cart_view(request):
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id, Customer=request.session.get('custid'), is_available=True)
-    custid = request.session.get('custid')
-    user = Customer.objects.get(custid=custid)
-    cart, created = Cart.objects.get_or_create(user=user)
+    
+    cart, created = Cart.objects.get_or_create(user=request.user)
     
     # Check if the product is already in the cart
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
