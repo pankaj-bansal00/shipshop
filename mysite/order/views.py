@@ -7,7 +7,7 @@ from base.models import Customer
 from seller.models import Product
 from .models import Address, Order  # Assuming the `Order` model is in the `orders` app
 
-@csrf_exempt
+
 def place_order(request, slug):
     # Fetch the product using slug
     product = get_object_or_404(Product, slug=slug)

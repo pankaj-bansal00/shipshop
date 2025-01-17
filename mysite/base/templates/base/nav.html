@@ -45,8 +45,7 @@
                 {% if user.username %}
             
                 <a>Hello,{{user.username}}</a>
-              
-              
+            
                     <a href="{% url 'logout' %}">Logout</a>
                     {% if order and order.slug %}
                     <a href="{% url 'place_order' slug=order.slug %}">Place Order</a>

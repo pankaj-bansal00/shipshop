@@ -179,8 +179,8 @@ def search_view(request):
 
 
 def category_view(request, category_slug):
-    category = get_object_or_404(category, slug=category_slug)
+    category = get_object_or_404(Category, slug=category_slug)
     products = Product.objects.filter(category=category)
     return render(
-        request, "category.html", {"category": category, "products": products}
+        request, "store/search_product.html", {"category": category, "products": products}
     )
