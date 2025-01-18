@@ -36,6 +36,7 @@ class Seller(models.Model):
         return f"{self.shop_name} - {self.owner_name}"
 
 class Product(models.Model):
+    is_available = models.BooleanField(default=True)
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='products', null=True, blank=True)  # Link to Seller
     Productid = models.AutoField(primary_key=True, default=None)
     name = models.CharField(max_length=200)

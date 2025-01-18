@@ -31,14 +31,22 @@ def cart_view(request):
         return redirect('login')
 
 
+
 def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id, Customer=request.session.get('custid'), is_available=True)
-    
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    
+    # Validate the customer
+    custid = request.session.get('custid')
+    user = get_object_or_404(Customer, custid=custid)
+
+    # Get the product
+    product = get_object_or_404(Product, Productid=product_id, is_available=True)
+
+    # Get or create the cart
+    cart, created = Cart.objects.get_or_create(user=user)
+
     # Check if the product is already in the cart
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    
+
+    # Increment the quantity if already exists
     if not created:
         cart_item.quantity += 1
     cart_item.save()
@@ -46,9 +54,22 @@ def add_to_cart(request, product_id):
     return redirect('cart_view')
 
 def checkout_view(request):
-    cart = Cart.objects.get(user=request.user)
-    # Placeholder logic for the checkout process
-    return render(request, 'cart/checkout.html', {'cart': cart})
+    # Fetch the customer ID from the session
+    custid = request.session.get('custid')
+    if not custid:
+        return redirect('login')  # Redirect to login if no customer ID is found in the session
+
+    try:
+        # Fetch the user object using the custid
+        user = Customer.objects.get(custid=custid)
+        # Retrieve the cart for the user
+        cart = Cart.objects.get(user=user)
+    except (Customer.DoesNotExist, Cart.DoesNotExist):
+        # Handle cases where the customer or cart does not exist
+        return redirect('cart_view')  # Redirect to a cart view or error page
+
+    # Render the checkout page
+    return render(request, 'checkout.html', {'cart': cart})
 
 
 def remove_from_cart(request, item_id):

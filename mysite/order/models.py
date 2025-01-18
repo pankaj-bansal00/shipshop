@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from seller.models import Product
 from seller.models import Seller
 from base.models import Customer
+from autoslug import AutoSlugField
 
 # Create your models here.
 class Order(models.Model):
@@ -17,6 +18,7 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     order_date = models.DateTimeField(auto_now_add=True)
     delivery_address = models.TextField()
+    slug = AutoSlugField(populate_from='product.name', unique=True, )  
     status = models.CharField(
         max_length=20,
         choices=[
