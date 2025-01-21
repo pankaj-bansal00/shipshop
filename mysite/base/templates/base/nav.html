@@ -13,8 +13,8 @@
     <nav class="navbar">
         <div class="logo">
             <!-- Add the logo image with a link -->
-            <a href="{% url 'home' %}"><img src="/static/images/logo.png" alt="Logo" height="70" width="150"></a>
-        </div>
+            <a href="{% url 'home' %}"><img src="/static/images/logo.png" alt="Logo" height="70" width="120"></a>
+        </div>          
 
         <!-- Search Bar -->
         <div class="search-container">
@@ -47,14 +47,6 @@
                 <a>Hello,{{user.username}}</a>
             
                     <a href="{% url 'logout' %}">Logout</a>
-                    {% if order and order.slug %}
-                    <a href="{% url 'place_order' slug=order.slug %}">Place Order</a>
-                {% else %}
-                    <span>No active order</span>
-                {% endif %}
-                
-
-
                 {% else %}
                     <a href="{% url 'login' %}">Login</a>
                     <a href="{% url 'signup' %}">Sign Up</a>

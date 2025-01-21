@@ -69,7 +69,7 @@ def checkout_view(request):
         return redirect('cart_view')  # Redirect to a cart view or error page
 
     # Render the checkout page
-    return render(request, 'checkout.html', {'cart': cart})
+    return render(request, 'checkout.html', {'cart': cart,})
 
 
 def remove_from_cart(request, item_id):

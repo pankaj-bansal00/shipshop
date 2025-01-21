@@ -96,7 +96,12 @@
 
                     <!-- Buy Now and Add to Cart Buttons -->
                     <div class="product-buttons d-flex justify-content-between">
-                        <a href="{% url 'place_order' product.Productid %}" class="btn btn-success">Buy Now</a>
+                        {% if product.quantity > 0 %}
+
+                        <a href="{% url 'place_order' product.slug %}" class="btn btn-success">Buy Now</a>
+                        {% else%}
+                        <p class="text-danger">Out of Stock</p>
+                        {% endif %}
                         <a href="{% url 'add_to_cart' product.Productid %}" class="btn btn-warning">Add to Cart</a>
                     </div>
                 </div>

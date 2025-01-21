@@ -12,13 +12,9 @@ from autoslug import AutoSlugField
 # Create your models here.
 class Order(models.Model):
     custid = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders')
-    seller_id = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='orders')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='orders')
-    quantity = models.PositiveIntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     order_date = models.DateTimeField(auto_now_add=True)
     delivery_address = models.TextField()
-    slug = AutoSlugField(populate_from='product.name', unique=True, )  
     status = models.CharField(
         max_length=20,
         choices=[
@@ -35,7 +31,7 @@ class Order(models.Model):
         return f"Order #{self.id} - {self.product.name} by {self.buyer.username}"
 
 class Address(models.Model):
-    custid = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='addresses')
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='addresses')
     address_line1 = models.CharField(max_length=255)
     address_line2 = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=100)
@@ -52,3 +48,9 @@ class Address(models.Model):
             # Make sure only one default address per user
             Address.objects.filter(user=self.user, is_default=True).update(is_default=False)
         super().save(*args, **kwargs)
+
+
+class Orderitems(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitems')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
