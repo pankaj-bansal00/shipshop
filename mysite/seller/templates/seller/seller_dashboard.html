@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href=" /static/sellor/seller dashboard.css">
+</head>
+
+<body>
+  
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if seller %}
+    <div class="navbar">
+        <a href="{% url 'home' %}"><img src="/static/images/logo.png" alt="Logo" height="70" width="150"></a>
+        <ul>
+          <h1>Welcome, {{ seller.owner_name }}</h1>
+    
+        </ul>
+        <div class="actions">
+            <a href="{% url 'add_product' %}">+ Add Product</a>
+            <a href="{% url 'seller_logout' %}" class="logout">Logout</a>
+        </div>
+    </div>
+
+    {% endif %}
+
+    <div class="product-list">
+        <h3>Your Products</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Photo</th>
+                    <!-- <th>Actions</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>₹{{ product.price }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>
+                        {% if product.photo %}
+                        <img src="{{ product.photo.url }}" alt="{{ product.name }}" width="100">
+                        {% else %}
+                        No Photo
+                        {% endif %}
+                    </td>   
+                    <td>
+                        <button onclick="window.location.href='{% url 'edit_product' product.Productid %}'">Edit</button>
+                        <button onclick="window.location.href='{% url 'delete_product' product.Productid %}'">Delete</button>
+                    </td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="no-products">No products found. Start adding products to your shop!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

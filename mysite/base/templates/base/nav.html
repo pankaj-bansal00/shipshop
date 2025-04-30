@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Navbar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/base/nav.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <!-- Add the logo image with a link -->
+            <a href="{% url 'home' %}"><img src="/static/images/logo.png" alt="Logo" height="70" width="120"></a>
+        </div>          
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <form method="get" action="{% url 'search' %}">
+                <input type="text" name="q" placeholder="Search for products...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="nav-links">
+            <!-- Categories Dropdown -->
+            <div class="dropdown">
+                <button class="dropbtn">Categories</button>
+                <div class="dropdown-content">
+                    <a href="{% url 'category' 'electronics' %}">Electronics</a>
+                    <a href="{% url 'category' 'fashion' %}">Fashion</a>
+                    <a href="{% url 'category' 'home-garden' %}">Home & Garden</a>
+                    <a href="{% url 'category' 'health-beauty' %}">Health & Beauty</a>
+                    <a href="{% url 'category' 'sports' %}">Sports</a>
+                </div>
+            </div>
+
+            <!-- User Account Links -->
+            <div class="nav-other-links">
+                <a href='{% url "cart_view" %}'>Cart</a>
+
+                {% if user.username %}
+            
+                <a>Hello,{{user.username}}</a>
+            
+                    <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'signup' %}">Sign Up</a>
+                {% endif %}
+                
+            </div>
+        </div>
+    </nav>
+</body>
+
+</html>
